@@ -22,15 +22,15 @@ export default function Home() {
       )}
       {mode === 'offline' && (
         <span className="mt-16">
-        <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content" onClick={() => {router.push('/offline?mode=active-roles');}}>Wolvesville Roles(Active)</Card>
-        <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content" onClick={() => {router.push('/offline?mode=all-roles');}}>Wolvesville Roles(All)</Card>
+        <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content" onClick={() => {router.push('/offline?mode=active-roles');}}>Wolvesville Roles (Active)</Card>
+        <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content" onClick={() => {router.push('/offline?mode=all-roles');}}>Wolvesville Roles (All)</Card>
         <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content" onClick={() => setMode('menu')}>Main Menu</Card>
         </span>
       )}
       {mode === 'online' && (
         <span className="mt-16">
-        <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content">Wolvesville Roles(Active)</Card>
-        <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content" onClick={() => setMode('offline')}>Wolvesville Roles(All)</Card>
+        <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content">Wolvesville Roles (Active)</Card>
+        <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content" onClick={() => setMode('offline')}>Wolvesville Roles (All)</Card>
         <Card className="bg-[#f06643b4] flex flex-col items-center w-max-content" onClick={() => setMode('menu')}>Main Menu</Card>
         </span>
       )}

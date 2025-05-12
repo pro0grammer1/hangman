@@ -25,12 +25,12 @@ const KeyButton = React.memo(({
     onClick: () => void;
 }) => (
     <button
-        className={`relative w-16 h-16 bg-black rounded-md
-      shadow-[0_4px_0_#222222,0_5px_5px_rgba(0,0,0,0.7)]
+        className={`relative w-[3ch] h-[2em] sm:w-10 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gray-500 sm:bg-black rounded-md
+      sm:shadow-[0_4px_0_#222222,0_5px_5px_rgba(0,0,0,0.7)]
       text-white text-lg font-bold cursor-pointer
-      transition-all duration-100 ease-in-out
+      sm:transition-all duration-100 sm:ease-in-out
       border-t-0 border-[#222222] border-l-0 border-b-0 border-r-2
-      ${pressed ? 'translate-y-1 bg-gray-500 cursor-default shadow-[0_2px_2px_rgba(0,0,0,0.7)]' : ''}`}
+      ${pressed ? 'sm:translate-y-1 bg-red-300 sm:bg-gray-500 cursor-default shadow-[0_2px_2px_rgba(0,0,0,0.7)]' : ''}`}
         onClick={onClick}
         disabled={pressed}
     >
@@ -50,7 +50,7 @@ const KeyboardRow = React.memo(({
     pressedKeys: Set<string>;
     onClick: (key: string) => void;
 }) => (
-    <div className='flex gap-10 justify-center m-10'>
+    <div className='flex  gap-1 sm:gap-3 md:gap-5 lg:gap-10 justify-center m-10'>
         {row.map(key => (
             <KeyButton
                 key={key}
@@ -119,8 +119,8 @@ export default function HangmanGame() {
     }, [word]);
 
     useEffect(() => {
-        if(!word) return;
-        if(wordArr.join("")===word){
+        if (!word) return;
+        if (wordArr.join("") === word) {
             stop();
             setGameOver(true);
             setGameResult('win');
@@ -145,7 +145,7 @@ export default function HangmanGame() {
 
         setPressedKeys(prev => {
             const newSet = new Set(prev);
-            
+
             if (word.includes(key)) {
                 setWordArr(prevArr =>
                     prevArr.map((char, i) =>
@@ -192,7 +192,7 @@ export default function HangmanGame() {
 
     const resetGame = useCallback(() => {
         if (!isClient || !mode) return;
-        
+
         getNewWord();
 
         setPressedKeys(new Set());
@@ -205,14 +205,26 @@ export default function HangmanGame() {
     }, [isClient, mode, getNewWord, word, gameSettings.totalLives, reset]);
 
 
-    if (!isClient || !mode || !modes.has(mode)) {
-        return null;
-    }
+    useEffect(() => {
+        // Only add listener if game is over and result exists
+        if (gameOver && gameResult) {
+            const handleKeyDown = (e: KeyboardEvent) => {
+                if (e.key === ' ' || e.keyCode === 32) {
+                    e.preventDefault();
+                    resetGame();
+                }
+            };
+
+            window.addEventListener('keydown', handleKeyDown);
+            return () => window.removeEventListener('keydown', handleKeyDown);
+        }
+    }, [gameOver, gameResult, resetGame]);
 
     if (gameOver && gameResult) {
+
         return (
             <div className={`flex flex-col items-center justify-center min-h-screen text-white ${gameResult === 'win' ? 'bg-green-600' : gameResult === 'loss' ? 'bg-red-600' : 'bg-[#443939]'}`}>
-                <h1 className="text-4xl font-bold mb-4">
+                <h1 className="text-2xl text-center sm:text-4xl font-bold mb-4">
                     Word was {word}!
                 </h1>
                 <h1 className="text-4xl font-bold mb-4">
@@ -222,15 +234,19 @@ export default function HangmanGame() {
                     You didn&rsquo;t even try :(
                 </div>
                 <p className="text-2xl mb-6">Time Taken: {displayTime}</p>
-                <Card onClick={resetGame} className="text-xl m-3">Play Again</Card>
+                <Card onClick={resetGame} className="text-lg sm:text-xl m-3">Play Again</Card>
                 <Card onClick={() => router.push('/')} className="text-xl m-3">Main Menu</Card>
             </div>
         );
     }
 
+    if (!isClient || !mode || !modes.has(mode)) {
+        return null;
+    }
+
     return (
         <div className="bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-between min-h-screen py-2">
-            <div className="flex w-full justify-between items-center p-8 pt-0">
+            <div className="flex w-full justify-between items-center p-2 sm:p-8 pt-0">
                 <div className="flex h-min">
                     {[...Array(lives)].map((_, i) => (
                         <Image src="/heart.png" width={30} height={30} alt="heart" key={`heart-${i}`} />
@@ -244,14 +260,14 @@ export default function HangmanGame() {
             </div>
 
             <div>
-                <h1 className="text-xl font-bold text-black">
+                <h1 className="text-xl text-center font-bold text-black">
                     {wordArr.map((c: string | '_' | ' ', i) => (
                         <span className="mr-4" key={i}>
                             {c === ' ' ? ' ' : c === '_' ? '_' : c}
                         </span>
                     ))}
                 </h1>
-                <div className="flex justify-around text-2xl font-bold text-black">
+                <div className="flex justify-around text-xl sm:text-2xl font-bold text-black">
                     {wordCount.map((c: string, i) => (
                         <span key={i} className="flex justify-center" style={{ width: `${c.length * 2 - 1}ch` }}>
                             {c.length}
