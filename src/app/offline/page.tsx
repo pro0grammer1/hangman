@@ -68,8 +68,9 @@ export default function HangmanGame() {
         timerSetting: 0,
         totalLives: 5
     });
+    const [gameOver, setGameOver] = useState(false);
+    const [gameResult, setGameResult] = useState<'win' | 'loss' | 'forfeit' | null>(null);
 
-    // Initialize client-side state and settings
     useEffect(() => {
         setIsClient(true);
         if (!mode || !modes.has(mode)) {
@@ -85,21 +86,26 @@ export default function HangmanGame() {
         if (!localStorage.getItem('timeState')) localStorage.setItem('timeState', '0');
     }, [mode, router]);
 
-    // Timer logic - fixed to properly handle both start modes
-    const { displayTime, start } = useTimer(gameSettings.timerSetting === 0);
+    const { displayTime, start, reset, stop } = useTimer(gameSettings.timerSetting === 0);
     const timerStartedRef = useRef(false);
 
-    // Game state
     const [lives, setLives] = useState(gameSettings.totalLives);
     const [pressedKeys, setPressedKeys] = useState<Set<string>>(new Set());
-    const word = useMemo(() => {
+    const [word, setWord] = useState('');
+
+    const getNewWord = useCallback(() => {
         if (!isClient || !mode) return '';
-        return Words[mode as keyof typeof Words][
+        const newWord = Words[mode as keyof typeof Words][
             Math.floor(Math.random() * Words[mode as keyof typeof Words].length)
         ];
+        setWord(newWord);
     }, [mode, isClient]);
 
     const [wordArr, setWordArr] = useState<(string | "_")[]>([]);
+
+    useEffect(() => {
+        getNewWord();
+    }, [getNewWord]);
 
     useEffect(() => {
         if (word) {
@@ -107,10 +113,25 @@ export default function HangmanGame() {
         }
     }, [word]);
 
+    useEffect(() => {
+        if(!word) return;
+        if(wordArr.join("")===word){
+            stop();
+            setGameOver(true);
+            setGameResult('win');
+        };
+    }, [word, wordArr, stop, setGameOver, setGameResult]);
+
     const wordCount = useMemo(() =>
         wordArr.join("").split(" "),
         [wordArr]
     );
+
+    const giveUp = () => {
+        stop();
+        setGameOver(true);
+        setGameResult('forfeit');
+    }
 
     const handleKeyPress = useCallback((key: string) => {
 
@@ -119,17 +140,22 @@ export default function HangmanGame() {
 
         setPressedKeys(prev => {
             const newSet = new Set(prev);
-
+            
             if (word.includes(key)) {
                 setWordArr(prevArr =>
                     prevArr.map((char, i) =>
                         word[i] === key ? key : char
                     )
                 );
+
             } else {
                 if (lives > 1) {
                     setLives(lives - 1);
-                } else {}
+                } else {
+                    stop();
+                    setGameOver(true);
+                    setGameResult('loss');
+                }
             }
 
             if (!newSet.has(key)) {
@@ -141,6 +167,7 @@ export default function HangmanGame() {
             }
             return newSet;
         });
+
     }, [gameSettings.timerSetting, start, word]);
 
     useEffect(() => {
@@ -157,8 +184,42 @@ export default function HangmanGame() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [isClient, handleKeyPress]);
 
+
+    const resetGame = useCallback(() => {
+        if (!isClient || !mode) return;
+        
+        getNewWord();
+
+        setPressedKeys(new Set());
+        setLives(gameSettings.totalLives);
+        setWordArr([...word].map((c: string) => (c === " " ? " " : "_")));
+        timerStartedRef.current = false;
+        reset();
+        setGameOver(false);
+        setGameResult(null);
+    }, [isClient, mode, getNewWord, gameSettings.totalLives, reset]);
+
+
     if (!isClient || !mode || !modes.has(mode)) {
         return null; // Or loading spinner during initialization
+    }
+
+    if (gameOver && gameResult) {
+        return (
+            <div className={`flex flex-col items-center justify-center min-h-screen text-white ${gameResult === 'win' ? 'bg-green-600' : gameResult === 'loss' ? 'bg-red-600' : 'bg-[#443939]'}`}>
+                <h1 className="text-4xl font-bold mb-4">
+                    Word was {word}!
+                </h1>
+                <h1 className="text-4xl font-bold mb-4">
+                    {gameResult === 'win' ? '🎉 You Win!' : gameResult === 'loss' ? '💀 You Lost!' : "You Surrender"}
+                </h1>
+                <div className={`text-white ${gameResult === 'forfeit' ? '' : 'hidden'}`}>
+                    You didn't even try :(
+                </div>
+                <p className="text-2xl mb-6">Time Taken: {displayTime}</p>
+                <Card onClick={resetGame} className="text-xl">Play Again</Card>
+            </div>
+        );
     }
 
     return (
@@ -173,7 +234,7 @@ export default function HangmanGame() {
                     ))}
                 </div>
                 <div className="text-xl font-bold">{displayTime}</div>
-                <Card onClick={() => { }} className="w-min-content">Give Up</Card>
+                <Card onClick={() => giveUp()} className="w-min-content">Give Up</Card>
             </div>
 
             <div>
