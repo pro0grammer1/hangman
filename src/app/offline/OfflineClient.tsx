@@ -111,7 +111,7 @@ export default function HangmanGame() {
 
             if (!newSet.has(key)) {
                 if (gameSettings.timerSetting === 1 && !timerStartedRef.current) {
-                    start();Wolvesville Ro
+                    start();
                     timerStartedRef.current = true;
                 }
                 newSet.add(key);
@@ -188,4 +188,4 @@ export default function HangmanGame() {
       </div>
     </div>
   );
-}Wolvesville Ro
+}

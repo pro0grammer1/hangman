@@ -42,3 +42,10 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Centered Wrapping of Overflowing text for mobile
 - Disabled double tap zooms for mobile
 - Smaller texts for mobile
+
+## Hangman 1.2
+- Disable text selection
+- Optimize Mobile Keyboard
+- Fix scroll problem on small devices
+- Fix black area on small devices
+- Structure Code
