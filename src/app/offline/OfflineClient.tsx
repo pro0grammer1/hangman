@@ -1,68 +1,14 @@
 'use client';
 
-import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import React from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
-import Image from 'next/image';
-import Card from '@/components/Card';
+import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { GameStatus } from '@/components/GameStatus';
+import { WordDisplay } from '@/components/WordDisplay';
+import { GameHeader } from '@/components/GameControls';
+import { KeyboardRow, keyboardLayout } from '@/components/Keyboard';
 import Words from '@/api/wordlist.json';
 import useTimer from '@/hooks/useTimer';
-
-const modes = new Set<string>(['all-roles', 'active-roles', 'bloodwars']);
-const keyboardLayout = [
-    ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
-    ['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'],
-    ['Z', 'X', 'C', 'V', 'B', 'N', 'M']
-];
-
-const KeyButton = React.memo(({
-    letter,
-    pressed,
-    onClick
-}: {
-    letter: string;
-    pressed: boolean;
-    onClick: () => void;
-}) => (
-    <button
-        className={`relative w-[3ch] h-[2em] sm:w-10 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gray-500 sm:bg-black rounded-md
-      sm:shadow-[0_4px_0_#222222,0_5px_5px_rgba(0,0,0,0.7)]
-      text-white text-lg font-bold cursor-pointer
-      sm:transition-all duration-100 sm:ease-in-out
-      border-t-0 border-[#222222] border-l-0 border-b-0 border-r-2
-      ${pressed ? 'sm:translate-y-1 bg-red-300 sm:bg-gray-500 cursor-default shadow-[0_2px_2px_rgba(0,0,0,0.7)]' : ''}`}
-        onClick={onClick}
-        disabled={pressed}
-    >
-        {letter.toUpperCase()}
-    </button>
-));
-
-
-KeyButton.displayName = "KeyButton";
-
-const KeyboardRow = React.memo(({
-    row,
-    pressedKeys,
-    onClick
-}: {
-    row: string[];
-    pressedKeys: Set<string>;
-    onClick: (key: string) => void;
-}) => (
-    <div className='flex  gap-1 sm:gap-3 md:gap-5 lg:gap-10 justify-center m-10'>
-        {row.map(key => (
-            <KeyButton
-                key={key}
-                letter={key}
-                pressed={pressedKeys.has(key)}
-                onClick={() => onClick(key)}
-            />
-        ))}
-    </div>
-));
-
-KeyboardRow.displayName = "KeyboardRow";
+import { MODES, DEFAULT_LIVES, DEFAULT_TIMER } from '@/constants/game';
 
 export default function HangmanGame() {
     const searchParams = useSearchParams();
@@ -70,15 +16,15 @@ export default function HangmanGame() {
     const mode = searchParams.get('mode');
     const [isClient, setIsClient] = useState(false);
     const [gameSettings, setGameSettings] = useState({
-        timerSetting: 0,
-        totalLives: 5
+        timerSetting: DEFAULT_TIMER,
+        totalLives: DEFAULT_LIVES
     });
     const [gameOver, setGameOver] = useState(false);
     const [gameResult, setGameResult] = useState<'win' | 'loss' | 'forfeit' | null>(null);
 
     useEffect(() => {
         setIsClient(true);
-        if (!mode || !modes.has(mode)) {
+        if (!mode || !MODES.has(mode)) {
             router.push('/');
             return;
         }
@@ -165,7 +111,7 @@ export default function HangmanGame() {
 
             if (!newSet.has(key)) {
                 if (gameSettings.timerSetting === 1 && !timerStartedRef.current) {
-                    start();
+                    start();Wolvesville Ro
                     timerStartedRef.current = true;
                 }
                 newSet.add(key);
@@ -204,88 +150,42 @@ export default function HangmanGame() {
         setGameResult(null);
     }, [isClient, mode, getNewWord, word, gameSettings.totalLives, reset]);
 
-
-    useEffect(() => {
-        // Only add listener if game is over and result exists
-        if (gameOver && gameResult) {
-            const handleKeyDown = (e: KeyboardEvent) => {
-                if (e.key === ' ' || e.keyCode === 32) {
-                    e.preventDefault();
-                    resetGame();
-                }
-            };
-
-            window.addEventListener('keydown', handleKeyDown);
-            return () => window.removeEventListener('keydown', handleKeyDown);
-        }
-    }, [gameOver, gameResult, resetGame]);
-
-    if (gameOver && gameResult) {
-
-        return (
-            <div className={`flex flex-col items-center justify-center min-h-screen text-white ${gameResult === 'win' ? 'bg-green-600' : gameResult === 'loss' ? 'bg-red-600' : 'bg-[#443939]'}`}>
-                <h1 className="text-2xl text-center sm:text-4xl font-bold mb-4">
-                    Word was {word}!
-                </h1>
-                <h1 className="text-4xl font-bold mb-4">
-                    {gameResult === 'win' ? '🎉 You Win!' : gameResult === 'loss' ? '💀 You Lost!' : "You Surrender"}
-                </h1>
-                <div className={`text-white ${gameResult === 'forfeit' ? '' : 'hidden'}`}>
-                    You didn&rsquo;t even try :(
-                </div>
-                <p className="text-2xl mb-6">Time Taken: {displayTime}</p>
-                <Card onClick={resetGame} className="text-lg sm:text-xl m-3">Play Again</Card>
-                <Card onClick={() => router.push('/')} className="text-xl m-3">Main Menu</Card>
-            </div>
-        );
-    }
-
-    if (!isClient || !mode || !modes.has(mode)) {
-        return null;
-    }
-
+  if (gameOver && gameResult) {
     return (
-        <div className="bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-between min-h-screen py-2">
-            <div className="flex w-full justify-between items-center p-2 sm:p-8 pt-0">
-                <div className="flex h-min">
-                    {[...Array(lives)].map((_, i) => (
-                        <Image src="/heart.png" width={30} height={30} alt="heart" key={`heart-${i}`} />
-                    ))}
-                    {[...Array(gameSettings.totalLives - lives)].map((_, i) => (
-                        <Image src="/broken_heart.png" width={30} height={30} alt="broken heart" key={`broken-${i}`} />
-                    ))}
-                </div>
-                <div className="text-xl font-bold">{displayTime}</div>
-                <Card onClick={() => giveUp()} className="w-min-content">Give Up</Card>
-            </div>
-
-            <div>
-                <h1 className="text-xl text-center font-bold text-black">
-                    {wordArr.map((c: string | '_' | ' ', i) => (
-                        <span className="mr-4" key={i}>
-                            {c === ' ' ? ' ' : c === '_' ? '_' : c}
-                        </span>
-                    ))}
-                </h1>
-                <div className="flex justify-around text-xl sm:text-2xl font-bold text-black">
-                    {wordCount.map((c: string, i) => (
-                        <span key={i} className="flex justify-center" style={{ width: `${c.length * 2 - 1}ch` }}>
-                            {c.length}
-                        </span>
-                    ))}
-                </div>
-            </div>
-
-            <div className="">
-                {keyboardLayout.map((row, rowIndex) => (
-                    <KeyboardRow
-                        key={rowIndex}
-                        row={row}
-                        pressedKeys={pressedKeys}
-                        onClick={handleKeyPress}
-                    />
-                ))}
-            </div>
-        </div>
+      <GameStatus
+        result={gameResult}
+        word={word}
+        time={displayTime}
+        onReset={resetGame}
+        onMenu={() => router.push('/')}
+      />
     );
-}
+  }
+
+  return (
+    <div className="select-none bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-between w-full min-h-[100dvh] py-2 overflow-hidden">
+      <GameHeader
+        lives={lives}
+        totalLives={DEFAULT_LIVES}
+        time={displayTime}
+        onGiveUp={giveUp}
+      />
+
+      <WordDisplay
+        wordArr={wordArr}
+        wordCount={wordCount}
+      />
+
+      <div className="">
+        {keyboardLayout.map((row, rowIndex) => (
+          <KeyboardRow
+            key={rowIndex}
+            row={row}
+            pressedKeys={pressedKeys}
+            onClick={handleKeyPress}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}Wolvesville Ro

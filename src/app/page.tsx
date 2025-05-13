@@ -10,7 +10,7 @@ export default function Home() {
   const router = useRouter();
 
   return (
-    <div className={`bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-center min-h-screen py-2`}>
+    <div className={`bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-center w-full  min-h-[100dvh] py-2`}>
       <h1 className="text-6xl font-bold text-[#F06543]">Hangman</h1>
       <hr className="w-60 border-2 border-spacing-0 border-dotted border-[#F06543]"></hr>
 
