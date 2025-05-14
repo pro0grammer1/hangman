@@ -49,3 +49,8 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Fix scroll problem on small devices
 - Fix black area on small devices
 - Structure Code
+
+## Hangman 1.3
+- Polished keyboard for small devices
+- Fixed Bugs
+- Introduced logs

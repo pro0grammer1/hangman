@@ -9,8 +9,14 @@ import { KeyboardRow, keyboardLayout } from '@/components/Keyboard';
 import Words from '@/api/wordlist.json';
 import useTimer from '@/hooks/useTimer';
 import { MODES, DEFAULT_LIVES, DEFAULT_TIMER } from '@/constants/game';
+import { addLog } from '@/modules/logdb';
+
 
 export default function HangmanGame() {
+    function isLetter(str: string) {
+        return str.length === 1 && str.match(/[A-Z|a-z]/i);
+    }
+
     const searchParams = useSearchParams();
     const router = useRouter();
     const mode = searchParams.get('mode');
@@ -60,7 +66,7 @@ export default function HangmanGame() {
 
     useEffect(() => {
         if (word) {
-            setWordArr([...word].map((c: string) => (c === " " ? " " : "_")));
+            setWordArr([...word].map((c: string) => (!isLetter(c) ? c : "_")));
         }
     }, [word]);
 
@@ -103,6 +109,7 @@ export default function HangmanGame() {
                 if (lives > 1) {
                     setLives(lives - 1);
                 } else {
+                    setLives(lives - 1);
                     stop();
                     setGameOver(true);
                     setGameResult('loss');
@@ -143,49 +150,64 @@ export default function HangmanGame() {
 
         setPressedKeys(new Set());
         setLives(gameSettings.totalLives);
-        setWordArr([...word].map((c: string) => (c === " " ? " " : "_")));
+        setWordArr([...word].map((c: string) => (!isLetter(c) ? c : "_")));
         timerStartedRef.current = false;
         reset();
         setGameOver(false);
         setGameResult(null);
     }, [isClient, mode, getNewWord, word, gameSettings.totalLives, reset]);
 
-  if (gameOver && gameResult) {
+    useEffect(() => {
+        if (gameOver && gameResult) {
+            addLog({
+                gameResult,
+                gameMode: mode,
+                usedLives: lives,
+                totalLives: gameSettings.totalLives,
+                timeTaken: parseFloat(displayTime),
+                timeSetting: gameSettings.timerSetting === 0,
+                word,
+                WordArray: wordArr.join(""),
+            });
+        }
+    }, [gameOver, gameResult, lives, displayTime, mode, word, wordArr, gameSettings]);
+
+    if (gameOver && gameResult) {
+        return (
+            <GameStatus
+                result={gameResult}
+                word={word}
+                time={displayTime}
+                onReset={resetGame}
+                onMenu={() => router.push('/')}
+            />
+        );
+    }
+
     return (
-      <GameStatus
-        result={gameResult}
-        word={word}
-        time={displayTime}
-        onReset={resetGame}
-        onMenu={() => router.push('/')}
-      />
+        <div className="select-none bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-between w-full min-h-[100dvh] py-2 overflow-hidden">
+            <GameHeader
+                lives={lives}
+                totalLives={DEFAULT_LIVES}
+                time={displayTime}
+                onGiveUp={giveUp}
+            />
+
+            <WordDisplay
+                wordArr={wordArr}
+                wordCount={wordCount}
+            />
+
+            <div className="mb-20 sm:m-0">
+                {keyboardLayout.map((row, rowIndex) => (
+                    <KeyboardRow
+                        key={rowIndex}
+                        row={row}
+                        pressedKeys={pressedKeys}
+                        onClick={handleKeyPress}
+                    />
+                ))}
+            </div>
+        </div>
     );
-  }
-
-  return (
-    <div className="select-none bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-between w-full min-h-[100dvh] py-2 overflow-hidden">
-      <GameHeader
-        lives={lives}
-        totalLives={DEFAULT_LIVES}
-        time={displayTime}
-        onGiveUp={giveUp}
-      />
-
-      <WordDisplay
-        wordArr={wordArr}
-        wordCount={wordCount}
-      />
-
-      <div className="">
-        {keyboardLayout.map((row, rowIndex) => (
-          <KeyboardRow
-            key={rowIndex}
-            row={row}
-            pressedKeys={pressedKeys}
-            onClick={handleKeyPress}
-          />
-        ))}
-      </div>
-    </div>
-  );
 }
