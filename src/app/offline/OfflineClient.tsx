@@ -198,7 +198,7 @@ export default function HangmanGame() {
                 wordCount={wordCount}
             />
 
-            <div className="mb-12 sm:m-0">
+            <div className="mb-4 overflow-x-scroll sm:m-0">
                 {keyboardLayout.map((row, rowIndex) => (
                     <KeyboardRow
                         key={rowIndex}

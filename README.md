@@ -58,3 +58,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 ## Hangman 1.31
 - Fixed Logs
 - Fixed keyboard on Mobile
+
+## Hangman 1.32
+-Mobile Keyboard update
