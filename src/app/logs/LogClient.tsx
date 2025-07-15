@@ -31,7 +31,7 @@ export default function LogComponent() {
         <Card className=" bg-[#f06643b4] items-center w-max mt-2" onClick={async () => { router.push('/') }}>Main Menu</Card>
         <h2 className=" text-xl font-semibold mb-2">All Log Entries</h2>
       </span>
-      <table className="min-w-full border border-gray-300">
+      <table className="min-w-full border border-gray-300 overflow-x-scroll">
         <thead>
           <tr className="bg-gray-200 text-left">
             <th className="border px-2 py-1">ID</th>
@@ -42,7 +42,7 @@ export default function LogComponent() {
             <th className="border px-2 py-1">Time Taken</th>
             <th className="border px-2 py-1">Time Setting</th>
             <th className="border px-2 py-1">Word</th>
-            <th className="border px-2 py-1">WordArray</th>
+            <th className="border px-2 py-1">Used Letters</th>
             <th className="border px-2 py-1">Timestamp</th>
           </tr>
         </thead>
