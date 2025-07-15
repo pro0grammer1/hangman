@@ -27,6 +27,7 @@ export default function HangmanGame() {
     });
     const [gameOver, setGameOver] = useState(false);
     const [gameResult, setGameResult] = useState<'win' | 'loss' | 'forfeit' | null>(null);
+    const prevGameOver = useRef(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -158,7 +159,8 @@ export default function HangmanGame() {
     }, [isClient, mode, getNewWord, word, gameSettings.totalLives, reset]);
 
     useEffect(() => {
-        if (gameOver && gameResult) {
+        if (gameOver !== prevGameOver.current && gameResult) {
+            prevGameOver.current = gameOver;
             addLog({
                 gameResult,
                 gameMode: mode,

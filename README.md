@@ -54,3 +54,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - Polished keyboard for small devices
 - Fixed Bugs
 - Introduced logs
+
+## Hangman 1.31
+- Fixed bug with logs
+
