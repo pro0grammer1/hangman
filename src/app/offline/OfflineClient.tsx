@@ -27,7 +27,6 @@ export default function HangmanGame() {
     });
     const [gameOver, setGameOver] = useState(false);
     const [gameResult, setGameResult] = useState<'win' | 'loss' | 'forfeit' | null>(null);
-    const prevGameOver = useRef(false);
 
     useEffect(() => {
         setIsClient(true);
@@ -159,8 +158,7 @@ export default function HangmanGame() {
     }, [isClient, mode, getNewWord, word, gameSettings.totalLives, reset]);
 
     useEffect(() => {
-        if (gameOver !== prevGameOver.current && gameResult) {
-            prevGameOver.current = gameOver;
+        if (gameOver && gameResult) {
             addLog({
                 gameResult,
                 gameMode: mode,
@@ -200,7 +198,7 @@ export default function HangmanGame() {
                 wordCount={wordCount}
             />
 
-            <div className="mb-20 sm:m-0">
+            <div className="mb-12 sm:m-0">
                 {keyboardLayout.map((row, rowIndex) => (
                     <KeyboardRow
                         key={rowIndex}

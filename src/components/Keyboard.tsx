@@ -36,7 +36,7 @@ export const KeyboardRow = React.memo(({
     pressedKeys: Set<string>;
     onClick: (key: string) => void;
 }) => (
-    <div className='flex gap-1 m-1 mb-6 placeholder:sm:gap-3 md:gap-5 lg:gap-10 justify-center sm:m-10'>
+    <div className='flex gap-1 m-1 sm:gap-3 md:gap-5 lg:gap-10 justify-center sm:m-10'>
         {row.map(key => (
             <KeyButton
                 key={key}
