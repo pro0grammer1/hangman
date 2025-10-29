@@ -60,7 +60,7 @@ export const GameStatus = ({
   }, [onReset]);
 
   return (
-    <div className={`flex flex-col items-center justify-center w-full min-h-[100dvh] text-white ${getBackgroundColor()}`}>
+    <div className={`flex flex-col items-center justify-center w-full min-h-dvh text-white ${getBackgroundColor()}`}>
       <div className="max-w-md w-full px-4 text-center">
         <h1 className="text-2xl sm:text-4xl font-bold mb-4">
           The word was: {word}

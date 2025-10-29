@@ -19,14 +19,14 @@ export default function LogComponent() {
   }, []);
 
   if (logs.length === 0) {
-    return <div className="bg-[url('/background.jpg')] bg-no-repeat bg-cover text-black w-full min-h-[100dvh] py-2 overflow-hidden">
+    return <div className="bg-[url('/background.jpg')] bg-no-repeat bg-cover text-black w-full min-h-dvh py-2 overflow-hidden">
 
       <Card className="bg-[#f06643b4] items-center w-max mt-2" onClick={async () => { router.push('/') }}>Main Menu</Card>
       No logs found.</div>;
   }
 
   return (
-    <div className="bg-[url('/background.jpg')] bg-no-repeat bg-cover text-black w-full min-h-[100dvh] py-2 overflow-hidden">
+    <div className="bg-[url('/background.jpg')] bg-no-repeat bg-cover text-black w-full min-h-dvh py-2 overflow-hidden">
       <span className="items-center flex flex-row">
         <Card className=" bg-[#f06643b4] items-center w-max mt-2" onClick={async () => { router.push('/') }}>Main Menu</Card>
         <h2 className=" text-xl font-semibold mb-2">All Log Entries</h2>

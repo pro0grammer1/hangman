@@ -185,7 +185,7 @@ export default function HangmanGame() {
     }
 
     return (
-        <div className="select-none bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-between w-full min-h-[100dvh] py-2 overflow-hidden">
+        <div className="select-none bg-[url('/background.jpg')] bg-no-repeat bg-cover flex flex-col items-center justify-between w-full min-h-dvh py-2 overflow-hidden">
             <GameHeader
                 lives={lives}
                 totalLives={DEFAULT_LIVES}

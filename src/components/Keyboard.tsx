@@ -12,7 +12,7 @@ const KeyButton = React.memo(({
     onClick: () => void;
 }) => (
     <button
-        className={`relative w-[calc(_(_100vw_/_10_)_-_0.25em_)] h-[8vh] sm:w-10 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gray-500 sm:bg-black rounded-md
+        className={`relative w-[calc((100vw/10)-0.25em)] h-[8vh] sm:w-10 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gray-500 sm:bg-black rounded-md
       sm:shadow-[0_4px_0_#222222,0_5px_5px_rgba(0,0,0,0.7)]
       text-white text-lg font-bold cursor-pointer
       sm:transition-all duration-100 sm:ease-in-out
