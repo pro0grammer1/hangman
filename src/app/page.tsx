@@ -4,16 +4,22 @@ import HangmanAnim from "@/components/hangmanAnim";
 import Image from "next/image";
 import Card from "@/components/Card";
 import CursorFollowManager from "@/components/CursorFollowManager";
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useReducer } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function Home() {
-  const [mode, setMode] = useState<'menu' | 'offline' | 'online'>('menu');
+  const [mode, setMode] = useState<'menu' | 'offline' | 'online'>();
   const router = useRouter();
+  const spinner = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    setMode('menu');
+    //spinner.current?.classList.toggle("spinnerAnimate");
+  }, []);
 
   return (
     <div className={`bganimate bg-size-[200%] bg-blend-darken bg-linear-to-br from-secondary from-30% to-tertiary bg-no-repeat bg-secondary flex flex-col items-center justify-center w-full  min-h-dvh py-2`}>
-      <p className="text-6xl font-bold text-shadow-sm text-shadow-black text-white">Hangman</p>
+      <p className="text-6xl font-bold text-shadow-sm text-shadow-black text-white">Han<span ref={spinner} className="animate-pulse">g</span>man</p>
       <CursorFollowManager />
 
       {mode === 'menu' && (

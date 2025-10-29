@@ -23,6 +23,22 @@
   }
 }
 
+@keyframes bounce {
+  0% {
+    color: green;
+  }
+  50% {
+    color: blue;
+  }
+  100% {
+    color: red;
+  }
+}
+
+.spinnerAnimate {
+  animation: bounce 1s ease-in-out infinite !important;
+}
+
 @layer components {
   .circle:hover::before {
     content: "";
