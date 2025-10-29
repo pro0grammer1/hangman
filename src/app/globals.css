@@ -94,7 +94,7 @@
   }
 
   .bganimate {
-    animation: backgroundAnimation 20s ease-in-out infinite;
+    animation: backgroundAnimation 10s ease-in-out infinite;
   }
 
   @keyframes backgroundAnimation {
