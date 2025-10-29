@@ -41,7 +41,7 @@ function teardownIfUnused() {
       rafId = null;
     }
     if (listenersInstalled && typeof window !== "undefined") {
-      window.removeEventListener("pointermove", pointerMove as any);
+      window.removeEventListener("pointermove", pointerMove as EventListener);
       listenersInstalled = false;
     }
   }
