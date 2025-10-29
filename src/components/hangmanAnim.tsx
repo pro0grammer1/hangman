@@ -15,6 +15,7 @@ const HangmanAnim = () => {
       src={animationData}
       speed={1.5}
       style={{ top: '4%', right: '25%', position: 'absolute', filter: 'invert(100%)', transform: 'scale(1.3)' }}
+      className="pointer-events-none select-none w-48 h-48 md:scale-72"
     />
   );
 };

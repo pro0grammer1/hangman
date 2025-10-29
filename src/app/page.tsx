@@ -18,7 +18,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className={`bganimate bg-size-[200%] bg-blend-darken bg-linear-to-br from-secondary from-30% to-tertiary bg-no-repeat bg-secondary flex flex-col items-center justify-center w-full  min-h-dvh py-2`}>
+    <div className={`bganimate bg-size-[200%] bg-linear-to-br from-secondary from-30% to-tertiary bg-no-repeat bg-secondary flex flex-col items-center justify-center w-full  min-h-dvh py-2`}>
       <p className="text-6xl font-bold text-shadow-sm text-shadow-black text-white flex">Han<span ref={spinner} className="animate-bounce">g</span>man</p>
       <CursorFollowManager />
 
