@@ -61,3 +61,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Hangman 1.32
 -Mobile Keyboard update
+
+## Hangman 2.0
+-New UI for desktop users, working on the responsiveness for mobile users
