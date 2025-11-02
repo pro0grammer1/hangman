@@ -46,6 +46,7 @@
     height: 100%;
     position: absolute;
     left: 0;
+    top: 0;
     background-color: #0a0a0a;
     border-top-right-radius: 1rem;
     border-bottom-left-radius: 1rem;
@@ -109,6 +110,47 @@
     100% {
       background-position: 0% 50%;
     }
+  }
+
+  .animate-fall {
+    animation: fall 3s linear forwards;
+  }
+
+  @keyframes fall {
+    0% {
+      transform: translateY(0);
+      opacity: 0.45;
+    }
+    100% {
+      transform: translateY(70vh);
+      opacity: 0;
+    }
+  }
+
+  .hangmanAnimate {
+    animation: pendulum 4s cubic-bezier(1, 1, 0.7, 0.7) infinite;
+    mix-blend-mode: color-dodge;
+    
+    transform-origin: top center;
+  }
+
+  @keyframes pendulum {
+    0% {
+      transform: rotate(0deg);
+    }
+    25% {
+      transform: rotate(7deg);
+    }
+    50% {
+      transform: rotate(0deg);
+    }
+    75% {
+      transform: rotate(-7deg);
+    }
+    100% {
+      transform: rotate(0deg);
+    }
+    
   }
 }
 
