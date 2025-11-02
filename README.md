@@ -64,3 +64,6 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 
 ## Hangman 2.0
 -New UI for desktop users, working on the responsiveness for mobile users
+
+## Hangman 2.1
+- UI redesign complete for the first pages
